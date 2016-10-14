@@ -23,30 +23,30 @@ instance == CodeTree where
   (==) (Node x aLeft aRight) (Node y bLeft bRight) = x == y && aLeft == bLeft && aRight == bRight
   (==) _ _ = False
 
-  
-getList str = [e \\ e <-: str ]
+stringToList str = [x\\x<-:str]
+
+getMatchesSum char list = sum (map (f char) list)
+  where 
+  	f char a 
+  	  | char == a = 1
+  	  			  = 0
 
 getFrequencies :: String -> [Frequency]
-getFrequencies str = [(a,sum (map (f a) (getList str)))  \\ a<-(getList str)]
-  where 
-    getList str = [e \\ e <-: str ]
-	f a b
-      | a == b = 1
-      | otherwise = 0
+getFrequencies str = filter f [(x,getMatchesSum x (stringToList str))\\x<-([' '..'~'])]
+  where f (_,number) = number > 0
+
 
 frequencyToFrequencies :: [Frequency] -> [Frequencies]
-frequencyToFrequencies frs = map f frs
-  where 
-  f (a,b) = ([(a,b)],b)
+frequencyToFrequencies str= map f str
+  where f (a,b) = ([(a,b)],b) 
 
 buildTree :: [Frequencies] -> CodeTree
 buildTree frs = Leaf 'a'
 
 sortFrequencies :: [Frequencies] -> [Frequencies]
-sortFrequencies a = sortBy f a
- where 
- f ([a,b],c) ([d,e],f) 
-   | c < f 
+sortFrequencies frs = sortBy f frs
+  where
+    f ([(a,b)],c) ([(d,e)],f) = c < f
 
 lookupCode :: CodeTree Char -> Code
 lookupCode _ _ = []
@@ -60,7 +60,7 @@ encode str = (Leaf 'a', [])
 decode :: (CodeTree, Code) -> String
 decode (tree, c) = ""
 
-Start = (and (flatten allTests), allTests)
+Start = sortFrequencies [([('r',2)],2),([('d',1)],1),([('k',1)],1),([('b',2)],2),([('a',5)],5)] //(and (flatten allTests), allTests)
   where
     allTests =
       [ test_getFrequencies
@@ -86,7 +86,7 @@ test_frequencyToFrequencies =
   ]
 
 test_sortFrequencies = 
-  [ sort (map snd (sortFrequencies [([('r',2)],2),([('d',1)],1),([('k',1)],1),([('b',2)],2),([('a',5)],5)])) == [1,1,2,2,5]
+  [ map snd (sortFrequencies [([('r',2)],2),([('d',1)],1),([('k',1)],1),([('b',2)],2),([('a',5)],5)]) == [1,1,2,2,5]
   ]
 
 test_buildTree = 
