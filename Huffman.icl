@@ -46,7 +46,7 @@ buildTree frs = Leaf 'a'
 sortFrequencies :: [Frequencies] -> [Frequencies]
 sortFrequencies frs = sortBy f frs
   where
-    f ([(a,b)],c) ([(d,e)],f) = c < f
+    f ([(a,b)],c) ([(d,e)],f) = c > f
 
 lookupCode :: CodeTree Char -> Code
 lookupCode _ _ = []
