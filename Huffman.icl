@@ -23,44 +23,75 @@ instance == CodeTree where
   (==) (Node x aLeft aRight) (Node y bLeft bRight) = x == y && aLeft == bLeft && aRight == bRight
   (==) _ _ = False
 
-stringToList str = [x\\x<-:str]
 
-getMatchesSum char list = sum (map (f char) list)
-  where 
-  	f char a 
-  	  | char == a = 1
-  	  			  = 0
+stringToList :: String ->[Char]
+stringToList str = [ x \\ x <-: str ]
 
 getFrequencies :: String -> [Frequency]
-getFrequencies str = filter f [(x,getMatchesSum x (stringToList str))\\x<-([' '..'~'])]
-  where f (_,number) = number > 0
-
+getFrequencies str =[ ( x,countCharInList x ( stringToList str ) ) \\ x <- removeDup (stringToList str) ]
+  where 
+    countCharInList char list = sum ( map ( boolToInt char ) list )
+      where
+  	    boolToInt char a 
+  	      | char == a = 1
+  	  		    	  = 0
 
 frequencyToFrequencies :: [Frequency] -> [Frequencies]
-frequencyToFrequencies str= map f str
-  where f (a,b) = ([(a,b)],b) 
+frequencyToFrequencies str= map frequencyToFrequencies str
+  where frequencyToFrequencies ( a , b ) = ( [ ( a , b ) ] , b ) 
 
 buildTree :: [Frequencies] -> CodeTree
-buildTree frs = Leaf 'a'
+buildTree x = constructTree(map frequencyToLeaf (sortFrequencies x))
+  where 
+    frequencyToLeaf ([(char,freq1)],freq) = (freq , Leaf char)
+
+constructTree [(_,x)] = x
+constructTree [(freq1,tree1):(freq2,tree2):rest] = constructTree ( mergeList (freq1+freq2,Node (freq1+freq2) tree1 tree2) rest )
+
+mergeList node [] = [node]
+mergeList (freq1,tree1) [(freq2,tree2):tail]
+  | freq1 < freq2 = [(freq1,tree1):(freq2,tree2):tail]
+  	              = [(freq2,tree2)] ++ mergeList (freq1,tree1) tail
 
 sortFrequencies :: [Frequencies] -> [Frequencies]
-sortFrequencies frs = sortBy f frs
-  where
-    f ([(a,b)],c) ([(d,e)],f) = c > f
-
+sortFrequencies frs = sortBy sortFunction frs
+  where 
+    sortFunction ([(a,b)],c) ([(d,e)],f) = c < f
+  
 lookupCode :: CodeTree Char -> Code
-lookupCode _ _ = []
+lookupCode (Leaf _) _ = [Zero]
+lookupCode tree ch = getLookupCode tree ch
+ 
+getLookupCode (Leaf _) _ = []  
+getLookupCode (Node _ left right) char 
+  | treeContainsChar left char = [Zero] ++ getLookupCode left char
+                               = [One]  ++ getLookupCode right char
+
+treeContainsChar (Leaf char) baseChar = char == baseChar
+treeContainsChar (Node _ left right) char = (treeContainsChar left char) || (treeContainsChar right char)  
 
 lookupPrefix :: CodeTree Code -> Char
-lookupPrefix _ _ = 'a'
+lookupPrefix (Leaf a) _ = a
+lookupPrefix (Node _ left rigth) [direction:list]
+  | 
+  direction == Zero = lookupPrefix left list
+                      = lookupPrefix rigth list
 
 encode :: String -> (CodeTree, Code)
-encode str = (Leaf 'a', [])
+encode str = (CodeTree, flatten [ lookupCode CodeTree char \\ char <-: str])
+where
+  CodeTree = buildTree (frequencyToFrequencies (getFrequencies  str))
 
 decode :: (CodeTree, Code) -> String
-decode (tree, c) = ""
+decode (tree, []) = ""
+decode (tree, list) = (toString char) +++ decode (tree ,(drop (length (lookupCode tree char)) list)) 
+  where
+  char = lookupPrefix tree list
 
-Start = sortFrequencies [([('r',2)],2),([('d',1)],1),([('k',1)],1),([('b',2)],2),([('a',5)],5)] //(and (flatten allTests), allTests)
+
+abrakadabra = Node 11 (Leaf 'a') (Node 6 (Node 4 (Leaf 'r') (Leaf 'b')) (Node 2 (Leaf 'k') (Leaf 'd')))
+
+Start = (and (flatten allTests), allTests)
   where
     allTests =
       [ test_getFrequencies
@@ -108,7 +139,7 @@ test_lookupCode =
     abrakadabra = Node 11 (Leaf 'a') (Node 6 (Node 4 (Leaf 'r') (Leaf 'b')) (Node 2 (Leaf 'k') (Leaf 'd')))
 
 test_lookupPrefix =
-  [ lookupPrefix abrakadabra (lookupCode abrakadabra 'a') == 'a'
+  [ lookupPrefix abrakadabra ((lookupCode abrakadabra 'a')) == 'a'
   , lookupPrefix abrakadabra (lookupCode abrakadabra 'b') == 'b'
   , lookupPrefix abrakadabra (lookupCode abrakadabra 'd') == 'd'
   , lookupPrefix abrakadabra (lookupCode (Leaf 'a') 'a')  == 'a'
@@ -128,3 +159,10 @@ test_decode =
   ]
   where
     abrakadabra = Node 11 (Leaf 'a') (Node 6 (Node 4 (Leaf 'r') (Leaf 'b')) (Node 2 (Leaf 'k') (Leaf 'd')))
+	
+	
+	
+	
+	
+	
+	
