@@ -158,10 +158,4 @@ test_decode =
   ]
   where
     abrakadabra = Node 11 (Leaf 'a') (Node 6 (Node 4 (Leaf 'r') (Leaf 'b')) (Node 2 (Leaf 'k') (Leaf 'd')))
-	
-	
-	
-	
-	
-	
-	
+    
