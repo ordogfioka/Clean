@@ -8,7 +8,6 @@ import StdEnv
 :: Vertex :== Int
 :: Adjacency :== (Color, [Weight]) 
 :: EdgeList :== (Color, [(Vertex, Weight)])
-
 listAdj =
   [(White,[(Weight 0),(Weight 1),Infinite,Infinite,Infinite,Infinite,Infinite])
   ,(Gray,[(Weight 1),(Weight 0),Infinite,(Weight 1),Infinite,Infinite,(Weight 1)])
@@ -29,9 +28,9 @@ listEdge =
   ,(Black,[(2,(Weight 1)),(4,(Weight 1))])
   ,(White,[(5,(Weight 1))])
   ] 
-
 derive gEq Color,Weight
 
+/****************NODE********************/  
 class Node t where
   newNode      :: Int -> t
   getColor     :: t -> Color
@@ -39,8 +38,6 @@ class Node t where
   neighbours   :: t -> [Vertex]
   add          :: t -> t
   addNeighbour :: t Vertex Weight -> t
-
-
 
 /****************ADJACENCY********************/  
 instance Node Adjacency where
@@ -50,6 +47,7 @@ instance Node Adjacency where
   neighbours node = [nr \\ nr<-[0..(length (snd node))] & weight <-(snd node) | not (weight === Infinite || weight === Weight 0)]
   add node = (fst node,(snd node)++[Infinite])
   addNeighbour node vertex weight = (fst node,take vertex (snd node) ++ [weight] ++ drop (vertex+1) (snd node))
+  //addNeighbour node vertex weight = (fst node, updateAt vertex weight (snd node))
 
 /****************EDGELSIT********************/  
 instance Node EdgeList where
@@ -61,6 +59,9 @@ instance Node EdgeList where
   addNeighbour node vertex weight = (fst node, insert f (vertex,weight) (snd node))
     where 
       f (v1,w1) (v2,w2) = v1<v2 
+      
+
+
 /********************CONVECSIONS********************/
 adj :: Int -> Adjacency
 adj x = newNode x
@@ -73,11 +74,85 @@ arrayAdj = { x \\ x <- listAdj }
 
 arrayEdge :: {} EdgeList
 arrayEdge = { x \\ x <- listEdge }
+toArray list ={e \\ e <- list}
+toList array =[e \\ e <-: array]
 
+class Graph t1 t2 | Node t2 where
+    resetGraph  :: (t1 t2) -> (t1 t2)
+    graphSize   :: (t1 t2) -> Int
+    getNode     :: (t1 t2) Vertex -> t2
+    addNode     :: (t1 t2) -> (t1 t2)
+    updateGraph :: (t1 t2) Vertex t2 -> (t1 t2)
+
+instance Graph [] t2 | Node t2 where
+	resetGraph graph = map (\(params) = (color params White) ) graph	
+	graphSize graph = length graph
+	getNode graph n =  graph !! n
+	addNode graph = graph ++ [newNode (length graph)]
+	updateGraph graph vertex node = updateAt vertex node graph
+instance Graph {} t2 | Node t2 where
+	resetGraph graph =  { color node White \\ node <-: graph }
+	graphSize graph = size graph
+	getNode graph n =  select graph n
+	addNode graph = toArray(toList graph ++ [newNode (size graph)])
+	updateGraph graph vertex node = toArray (updateAt vertex node (toList graph))
+	
+whiteNeighbours :: (t1 t2) Vertex -> [Vertex] | Graph t1 t2
+whiteNeighbours graph vertex = flatten(  map (\(ver) = f ver (getColor (getNode graph ver) === White) ) (neighbours (getNode graph vertex)))
+  where
+    f vertex bool 
+      | bool == True = [vertex]
+                     = [] 
 /********************START********************/
-Start = test_addNeighbour
+Start = test_whiteNeighbours
 
 /********************TESTS********************/
+test_whiteNeighbours =
+  [ whiteNeighbours listAdj 1 == [0,6]
+  , whiteNeighbours listEdge 2 == [0]
+  , map (whiteNeighbours listAdj) [0..6] == map (whiteNeighbours arrayAdj) [0..6]
+  , map (whiteNeighbours listEdge) [0..6] == map (whiteNeighbours arrayEdge) [0..6]
+  ]
+
+test_updateGraph =
+  [ getNode (updateGraph listAdj 1 na) 1 === na
+  , getNode (updateGraph listEdge 1 ne) 1 === ne
+  , getNode (updateGraph arrayAdj 1 na) 1 === na
+  , getNode (updateGraph arrayEdge 1 ne) 1 === ne
+  ]
+  where
+    ne :: EdgeList
+    ne = (White, [])
+
+    na :: Adjacency
+    na = (Gray,[(Weight 1),(Weight 0),Infinite,(Weight 1),(Weight 2),Infinite,(Weight 1)])
+    
+test_addNode =
+  [ getNode (addNode listAdj) (graphSize listAdj) === (White, [Infinite,Infinite,Infinite,Infinite,Infinite,Infinite,Infinite,Weight 0])
+  , graphSize (addNode (addNode listEdge)) == 9
+  , getNode (addNode (addNode arrayEdge)) (graphSize arrayEdge) === (White, [])
+  ]
+
+test_getNode =
+  [ getNode listAdj 1 === (Gray,[(Weight 1),(Weight 0),Infinite,(Weight 1),Infinite,Infinite,(Weight 1)])
+  , map (getNode listAdj) [0..6] === map (getNode arrayAdj) [0..6]
+  , getNode listEdge 3 === (Gray,[(1,(Weight 1)),(4,(Weight 1))])
+  , map (getNode listEdge) [0..6] === map (getNode arrayEdge) [0..6]
+  ]
+  
+test_graphSize =
+  [ graphSize listAdj == 7
+  , graphSize arrayAdj == 7
+  ]
+  
+test_resetGraph =
+  [ map getColor (resetGraph listAdj) === repeatn 7 White
+  , map getColor (resetGraph listEdge) === repeatn 7 White
+  , [getColor x \\ x <-: (resetGraph arrayAdj)] === repeatn 7 White
+  , [getColor x \\ x <-: (resetGraph arrayEdge)] === repeatn 7 White
+  ]
+  
+/********************NODE TESTS********************/
 test_addNeighbour =
   [ addNeighbour (adj 2) 1 (Weight 3) === (White, [Infinite, Weight 3, Weight 0])
   , addNeighbour (addNeighbour (adj 2) 1 (Weight 3)) 0 (Weight 5) === (White, [Weight 5, Weight 3, Weight 0])
