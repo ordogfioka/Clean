@@ -110,6 +110,12 @@ OtherModules
 	Module
 		Name:	StdTuple
 		Dir:	{Application}\Libraries\StdEnv
+		Dcl
+			WindowPosition
+				X:	10
+				Y:	10
+				SizeX:	800
+				SizeY:	640
 		DclOpen:	False
 		IclOpen:	False
 	Module

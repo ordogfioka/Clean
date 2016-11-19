@@ -26,21 +26,16 @@ instance Node Adjacency where
   newNode a = (White,repeatn a Infinite ++ [Weight 0])
   getColor node = fst node
   color node color =  (color,snd node)  
-  neighbours node = [nr \\ nr<-[0..(length (snd node))] & vertex <-(snd node) | f (snd vertex)]
-    where 
-      f vertex 
-        | vertex === Infinite = False
-        | vertex === Weight 0 = False
-                              = True
+  neighbours node = [nr \\ nr<-[0..(length (snd node))] & weight <-(snd node) | not (weight === Infinite || weight === Weight 0)]
 
 /****************EDGELSIT********************/  
 instance Node EdgeList where
   newNode a = (White,[])
   getColor node = fst node
-  color node color =  []
+  color node color =  (color,snd node) 
   neighbours node = []
 
-Start = map neighbours listEdge
+Start = test_neighbours
 
 listAdj :: [] Adjacency
 listAdj =
@@ -94,6 +89,7 @@ test_color =
 
     edge :: EdgeList
     edge = (White, [(1, Weight 2)])
+
     
 test_neighbours =
   [ map neighbours listAdj  === [[1],[0,3,6],[0],[1,4],[3],[2,4],[5]]
