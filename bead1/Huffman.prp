@@ -5,8 +5,8 @@ MainModule
 	DclOpen:	False
 	Icl
 		WindowPosition
-			X:	-8
-			Y:	-27
+			X:	0
+			Y:	0
 			SizeX:	1579
 			SizeY:	766
 	IclOpen:	True

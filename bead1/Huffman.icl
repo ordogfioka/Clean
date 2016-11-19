@@ -90,7 +90,7 @@ decode (tree, list) = (toString char) +++ decode (tree ,(drop (length (lookupCod
 
 abrakadabra = Node 11 (Leaf 'a') (Node 6 (Node 4 (Leaf 'r') (Leaf 'b')) (Node 2 (Leaf 'k') (Leaf 'd')))
 
-Start = (and (flatten allTests), allTests)
+Start = sortFrequencies (frequencyToFrequencies (getFrequencies "sokféle karakterbõl álló szöveg"))//(and (flatten allTests), allTests)
   where
     allTests =
       [ test_getFrequencies
