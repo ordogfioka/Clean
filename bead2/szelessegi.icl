@@ -103,10 +103,21 @@ whiteNeighbours graph vertex = flatten(  map (\(ver) = f ver (getColor (getNode 
     f vertex bool 
       | bool == True = [vertex]
                      = [] 
+addEdgeToGraph :: (t1 t2) Vertex Vertex Weight -> (t1 t2) | Graph t1 t2
+addEdgeToGraph graph v1 v2 w = updateGraph graph v1 (addNeighbour (getNode graph v1) v2 w )
+
 /********************START********************/
-Start = test_whiteNeighbours
+Start = test_addEdgeToGraph
 
 /********************TESTS********************/
+test_addEdgeToGraph =
+  [ neighbours (getNode (addEdgeToGraph listAdj 3 0 (Weight 5)) 3) == [0,1,4]
+  , neighbours (getNode (addEdgeToGraph listEdge 3 0 (Weight 5)) 3) == [0,1,4]
+  , neighbours (getNode (addEdgeToGraph arrayAdj 3 0 (Weight 5)) 3) == [0,1,4]
+  , neighbours (getNode (addEdgeToGraph arrayEdge 3 0 (Weight 5)) 3) == [0,1,4]
+  , getNode (addEdgeToGraph listAdj 4 0 (Weight 5)) 4 === (White,[(Weight 5),Infinite,Infinite,(Weight 1),(Weight 0),Infinite,Infinite])
+  ]
+
 test_whiteNeighbours =
   [ whiteNeighbours listAdj 1 == [0,6]
   , whiteNeighbours listEdge 2 == [0]
