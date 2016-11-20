@@ -1,0 +1,127 @@
+Version: 1.4
+MainModule
+	Name:	Vigenere
+	Dir:	{Project}
+	DclOpen:	False
+	IclOpen:	True
+OtherModules
+	Module
+		Name:	StdArray
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdBool
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdChar
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdCharList
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdClass
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdEnum
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdEnv
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdFile
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdFunc
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdInt
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdList
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdMisc
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdOrdList
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdOverloaded
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdReal
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdString
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdTuple
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	_SystemArray
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	_SystemEnum
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdArrayExtensions
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdLib
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdLibMisc
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdListExtensions
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdMaybe
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False

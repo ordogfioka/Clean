@@ -13,6 +13,28 @@ import StdEnv
 /********************** Generic (===) **************************/  
 derive gEq Color,Weight
 
+/*************************************** Input for tests *****************************************/
+listAdj =
+  [(White,[(Weight 0),(Weight 1),Infinite,Infinite,Infinite,Infinite,Infinite])
+  ,(Gray,[(Weight 1),(Weight 0),Infinite,(Weight 1),Infinite,Infinite,(Weight 1)])
+  ,(Black,[(Weight 1),Infinite,(Weight 0),Infinite,Infinite,Infinite,Infinite])
+  ,(Gray,[Infinite,(Weight 1),Infinite,(Weight 0),(Weight 1),Infinite,Infinite])
+  ,(White,[Infinite,Infinite,Infinite,(Weight 1),(Weight 0),Infinite,Infinite])
+  ,(Black,[Infinite,Infinite,(Weight 1),Infinite,(Weight 1),(Weight 0),Infinite])
+  ,(White,[Infinite,Infinite,Infinite,Infinite,Infinite,(Weight 1),(Weight 0)])
+  ]
+
+listEdge :: [] EdgeList
+listEdge =
+  [(White,[(1,(Weight 1))])
+  ,(Gray,[(0,(Weight 1)),(3,(Weight 1)),(6,(Weight 1))])
+  ,(Black,[(0,(Weight 1))])
+  ,(Gray,[(1,(Weight 1)),(4,(Weight 1))])
+  ,(White,[(3,(Weight 1))])
+  ,(Black,[(2,(Weight 1)),(4,(Weight 1))])
+  ,(White,[(5,(Weight 1))])
+  ] 
+  
 /********************** NODE INTERFCE **************************/  
 class Node t where
   newNode      :: Int -> t
@@ -44,12 +66,6 @@ instance Node EdgeList where
       f (v1,w1) (v2,w2) = v1<v2 
 
 /************************ CONVERSIONS ************************/
-adj :: Int -> Adjacency
-adj x = newNode x
-
-edge :: Int -> EdgeList
-edge x = newNode x 
-
 arrayAdj :: {} Adjacency
 arrayAdj = { x \\ x <- listAdj }
 
@@ -149,28 +165,6 @@ Start =(and (flatten allTests),allTests)
 
 
 /******************************************   TESTS   ********************************************/
-
-/*************************************** Input for tests *****************************************/
-listAdj =
-  [(White,[(Weight 0),(Weight 1),Infinite,Infinite,Infinite,Infinite,Infinite])
-  ,(Gray,[(Weight 1),(Weight 0),Infinite,(Weight 1),Infinite,Infinite,(Weight 1)])
-  ,(Black,[(Weight 1),Infinite,(Weight 0),Infinite,Infinite,Infinite,Infinite])
-  ,(Gray,[Infinite,(Weight 1),Infinite,(Weight 0),(Weight 1),Infinite,Infinite])
-  ,(White,[Infinite,Infinite,Infinite,(Weight 1),(Weight 0),Infinite,Infinite])
-  ,(Black,[Infinite,Infinite,(Weight 1),Infinite,(Weight 1),(Weight 0),Infinite])
-  ,(White,[Infinite,Infinite,Infinite,Infinite,Infinite,(Weight 1),(Weight 0)])
-  ]
-
-listEdge :: [] EdgeList
-listEdge =
-  [(White,[(1,(Weight 1))])
-  ,(Gray,[(0,(Weight 1)),(3,(Weight 1)),(6,(Weight 1))])
-  ,(Black,[(0,(Weight 1))])
-  ,(Gray,[(1,(Weight 1)),(4,(Weight 1))])
-  ,(White,[(3,(Weight 1))])
-  ,(Black,[(2,(Weight 1)),(4,(Weight 1))])
-  ,(White,[(5,(Weight 1))])
-  ] 
 
 /******************************************* Node Test ********************************************/
 test_newNode =

@@ -1,6 +1,6 @@
+
+
 ## Részletes leírás
-
-
 
 # Huffman-kódolás
 
