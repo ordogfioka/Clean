@@ -20,7 +20,7 @@ OtherModules
 				Y:	10
 				SizeX:	800
 				SizeY:	640
-		DclOpen:	True
+		DclOpen:	False
 		IclOpen:	False
 	Module
 		Name:	StdArray

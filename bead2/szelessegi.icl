@@ -104,7 +104,26 @@ helper graph [x:xs] = [x] ++ helper (updateGraph (newGraph graph (whiteNeighbour
     newGraph :: (a b) [Vertex] -> (a b) | Graph a b 
     newGraph gr [] = gr
     newGraph gr [y:ys]= newGraph (updateGraph gr y (color (getNode gr y) Gray)) ys
-    
+     
+/***************************** gJSON ***************************/
+generic gJSON a :: a -> String
+gJSON{|UNIT|}    x = ""
+gJSON{|Int|}     x = "{\"type\":\"int\",\"value\":"       +++ toString(x) +++ "}"
+gJSON{|Real|}    x = "{\"type\":\"real\",\""              +++ toString(x) +++ "\"}"
+gJSON{|String|}  x = "{\"type\":\"String\",\"value\":\""  +++ toString(x) +++ "\"}"
+gJSON{|Bool|}    x = "{\"type\":\"bool\",\"value\":"      +++ toString(x) +++ "}"
+gJSON{|Char|}    x = "{\"type\":\"char\",\"value\":\""    +++ toString(x) +++ "\"}"
+gJSON{|OBJECT of o|} f (OBJECT x) = "{\"type\":\"" +++ o.gtd_name +++"\",\"value\":"+++ f x +++ "}"
+gJSON{|EITHER|} fl fr (LEFT x) =  fl x
+gJSON{|EITHER|} fl fr (RIGHT x) = fr x
+gJSON{|PAIR|} fx fy (PAIR x y) = (fx x) +++ "," +++ (fy y)
+gJSON{|CONS of c|} f (CONS x) = "{\"constructor\":\"" +++ c.gcd_name +++ "\",\"params\":[" +++ (f x) +++ "]}"
+
+derive gJSON Color,Weight,(,),[]
+
+toJSON :: a -> String | gJSON {|*|} a
+toJSON a = gJSON {|*|} a
+
 /***************************** START ***************************/
 Start =(and (flatten allTests),allTests)
  where
@@ -123,7 +142,9 @@ Start =(and (flatten allTests),allTests)
   , test_updateGraph 
   , test_whiteNeighbours 
   , test_addEdgeToGraph 
-  , test_bfs   
+  , test_bfs
+  
+  , test_toJSON
   ]
 
 
@@ -277,3 +298,31 @@ test_bfs =
   , bfs arrayAdj 4 == [4,3,1,0,6,5,2]
   , bfs (addNode arrayAdj) 4 == [4,3,1,0,6,5,2]
   ]
+
+/********************************************** gJSON Test ***********************************************/  
+test_toJSON =
+  [ toJSON [(White,[(Weight 0)])]
+      ==
+    "{\"type\":\"_List\",\"value\":{\"constructor\":\"_Cons\",\"params\":[{\"type\":"
+    +++ "\"_Tuple2\",\"value\":{\"constructor\":\"_Tuple2\",\"params\":[{\"type\":\"Color\",\"value\":"
+    +++ "{\"constructor\":\"White\",\"params\":[]}},{\"type\":\"_List\",\"value\":{\"constructor\":"
+    +++ "\"_Cons\",\"params\":[{\"type\":\"Weight\",\"value\":{\"constructor\":\"Weight\",\"params\":"
+    +++ "[{\"type\":\"int\",\"value\":0}]}},{\"type\":\"_List\",\"value\":{\"constructor\":"
+    +++ "\"_Nil\",\"params\":[]}}]}}]}},{\"type\":\"_List\",\"value\":{\"constructor\":\"_Nil\",\"params\":[]}}]}}"
+  , toJSON [(White,[(1,Weight 1)]), (White,[(0,Weight 1)])]
+      ==
+    "{\"type\":\"_List\",\"value\":{\"constructor\":\"_Cons\",\"params\":[{\"type\":"
+    +++ "\"_Tuple2\",\"value\":{\"constructor\":\"_Tuple2\",\"params\":[{\"type\":\"Color\""
+    +++ ",\"value\":{\"constructor\":\"White\",\"params\":[]}},{\"type\":\"_List\",\"value\":"
+    +++ "{\"constructor\":\"_Cons\",\"params\":[{\"type\":\"_Tuple2\",\"value\":{\"constructor\":"
+    +++ "\"_Tuple2\",\"params\":[{\"type\":\"int\",\"value\":1},{\"type\":\"Weight\",\"value\":"
+    +++ "{\"constructor\":\"Weight\",\"params\":[{\"type\":\"int\",\"value\":1}]}}]}},{\"type\":"
+    +++ "\"_List\",\"value\":{\"constructor\":\"_Nil\",\"params\":[]}}]}}]}},{\"type\":\"_List\","
+    +++ "\"value\":{\"constructor\":\"_Cons\",\"params\":[{\"type\":\"_Tuple2\",\"value\":"
+    +++ "{\"constructor\":\"_Tuple2\",\"params\":[{\"type\":\"Color\",\"value\":{\"constructor\":"
+    +++ "\"White\",\"params\":[]}},{\"type\":\"_List\",\"value\":{\"constructor\":\"_Cons\",\"params\":"
+    +++ "[{\"type\":\"_Tuple2\",\"value\":{\"constructor\":\"_Tuple2\",\"params\":[{\"type\":"
+    +++ "\"int\",\"value\":0},{\"type\":\"Weight\",\"value\":{\"constructor\":\"Weight\",\"params\":"
+    +++ "[{\"type\":\"int\",\"value\":1}]}}]}},{\"type\":\"_List\",\"value\":{\"constructor\":"
+    +++ "\"_Nil\",\"params\":[]}}]}}]}},{\"type\":\"_List\",\"value\":{\"constructor\":\"_Nil\",\"params\":[]}}]}}]}}"
+  ]  
