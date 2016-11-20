@@ -106,10 +106,27 @@ whiteNeighbours graph vertex = flatten(  map (\(ver) = f ver (getColor (getNode 
 addEdgeToGraph :: (t1 t2) Vertex Vertex Weight -> (t1 t2) | Graph t1 t2
 addEdgeToGraph graph v1 v2 w = updateGraph graph v1 (addNeighbour (getNode graph v1) v2 w )
 
-/********************START********************/
-Start = test_addEdgeToGraph
+bfs :: (a b) Int -> [Vertex] | Graph a b
+bfs graph vertex =drop 1 ([vertex] ++ helper (updateGraph (resetGraph graph) vertex (color (getNode (resetGraph graph) vertex) Gray)) [vertex])
 
+helper :: (a b) [Vertex] -> [Vertex] | Graph a b
+helper graph [] = []
+helper graph [x:xs] = [x] ++ helper (updateGraph (newGraph graph (whiteNeighbours graph x)) x (color (getNode graph x) Black) ) (xs ++ sort (whiteNeighbours graph x) )
+  where
+    newGraph :: (a b) [Vertex] -> (a b) | Graph a b 
+    newGraph gr [] = gr
+    newGraph gr [y:ys]= newGraph (updateGraph gr y (color (getNode gr y) Gray)) ys
+    
+/********************START********************/
+Start = test_bfs
 /********************TESTS********************/
+test_bfs =
+  [ bfs listEdge 0 == [0,1,3,6,4,5,2]
+  , bfs listAdj 1 == [1,0,3,6,4,5,2]
+  , bfs arrayEdge 6 == [6,5,2,4,0,3,1]
+  , bfs arrayAdj 4 == [4,3,1,0,6,5,2]
+  , bfs (addNode arrayAdj) 4 == [4,3,1,0,6,5,2]
+  ]
 test_addEdgeToGraph =
   [ neighbours (getNode (addEdgeToGraph listAdj 3 0 (Weight 5)) 3) == [0,1,4]
   , neighbours (getNode (addEdgeToGraph listEdge 3 0 (Weight 5)) 3) == [0,1,4]
