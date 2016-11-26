@@ -1,6 +1,6 @@
 Version: 1.4
 MainModule
-	Name:	Vigenere
+	Name:	bintree
 	Dir:	{Project}
 	DclOpen:	False
 	Icl
@@ -8,9 +8,14 @@ MainModule
 			X:	10
 			Y:	10
 			SizeX:	783
-			SizeY:	640
+			SizeY:	643
 	IclOpen:	True
 OtherModules
+	Module
+		Name:	GenEq
+		Dir:	{Application}\Libraries\Generics
+		DclOpen:	False
+		IclOpen:	False
 	Module
 		Name:	StdArray
 		Dir:	{Application}\Libraries\StdEnv
@@ -53,6 +58,11 @@ OtherModules
 		IclOpen:	False
 	Module
 		Name:	StdFunc
+		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdGeneric
 		Dir:	{Application}\Libraries\StdEnv
 		DclOpen:	False
 		IclOpen:	False
@@ -104,26 +114,6 @@ OtherModules
 	Module
 		Name:	_SystemEnum
 		Dir:	{Application}\Libraries\StdEnv
-		DclOpen:	False
-		IclOpen:	False
-	Module
-		Name:	StdArrayExtensions
-		Dir:	{Application}\Libraries\StdLib
-		DclOpen:	False
-		IclOpen:	False
-	Module
-		Name:	StdLib
-		Dir:	{Application}\Libraries\StdLib
-		DclOpen:	False
-		IclOpen:	False
-	Module
-		Name:	StdLibMisc
-		Dir:	{Application}\Libraries\StdLib
-		DclOpen:	False
-		IclOpen:	False
-	Module
-		Name:	StdListExtensions
-		Dir:	{Application}\Libraries\StdLib
 		DclOpen:	False
 		IclOpen:	False
 	Module
