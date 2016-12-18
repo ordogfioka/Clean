@@ -1,14 +1,8 @@
 Version: 1.4
 MainModule
-	Name:	bintree
+	Name:	hash
 	Dir:	{Project}
 	DclOpen:	False
-	Icl
-		WindowPosition
-			X:	-8
-			Y:	-31
-			SizeX:	1263
-			SizeY:	890
 	IclOpen:	True
 OtherModules
 	Module
@@ -114,6 +108,26 @@ OtherModules
 	Module
 		Name:	_SystemEnum
 		Dir:	{Application}\Libraries\StdEnv
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdArrayExtensions
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdLib
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdLibMisc
+		Dir:	{Application}\Libraries\StdLib
+		DclOpen:	False
+		IclOpen:	False
+	Module
+		Name:	StdListExtensions
+		Dir:	{Application}\Libraries\StdLib
 		DclOpen:	False
 		IclOpen:	False
 	Module
